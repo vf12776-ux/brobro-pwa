@@ -1,115 +1,217 @@
-<script>
-    // === Service Worker ===
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(() => console.log('SW registered'))
-                .catch(err => console.log('SW error:', err));
-        });
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BroBro Lab</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="BroBro Lab">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: linear-gradient(145deg, #1a1a1a 0%, #141414 100%);
+            border-radius: 28px;
+            padding: 40px 28px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 0 1px #333, inset 0 1px 0 rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        .logo-text { font-size: 64px; font-weight: 900; color: #007AFF; margin-bottom: 10px; letter-spacing: -2px; }
+        h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #ffffff; }
+        .sub { color: #8e8e93; font-size: 15px; margin-bottom: 36px; font-weight: 500; }
+        
+        .install-buttons { display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px; }
+        .install-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px 24px; border: none; border-radius: 16px;
+            font-size: 16px; font-weight: 600; cursor: pointer; 
+            background: #007AFF; color: #fff;
+            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
+        .install-btn:active { transform: scale(0.98); opacity: 0.9; }
+        
+        .nav-btn {
+            display: block; padding: 16px 20px; margin-bottom: 12px; border-radius: 16px;
+            text-decoration: none; font-size: 16px; font-weight: 600; 
+            background: #2c2c2e; color: #fff; border: 1px solid #3a3a3c;
+        }
+        .nav-btn:active { transform: scale(0.98); background: #3a3a3c; }
+        
+        .chrome-hint {
+            background: rgba(255,255,255,0.05); border: 1px solid #333;
+            border-radius: 16px; padding: 20px; margin-bottom: 36px; text-align: center; color: #f0f0f0;
+        }
+        .chrome-hint .hint-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #007AFF; }
+        .copy-btn {
+            padding: 12px 24px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+            cursor: pointer; background: #007AFF; color: #fff; width: 100%; margin-bottom: 12px;
+        }
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(12px); z-index: 200;
+            justify-content: center; align-items: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: #1c1c1e; border: 1px solid #333; border-radius: 24px;
+            max-width: 320px; width: 85%; padding: 28px 24px; text-align: center; color: #f0f0f0;
+        }
+        .modal-content h3 { margin-bottom: 20px; color: #007AFF; font-size: 20px; }
+        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; text-align: left; }
+        .step-num {
+            background: #007AFF; color: #fff; width: 28px; height: 28px; border-radius: 14px;
+            display: inline-flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-weight: bold; font-size: 14px;
+        }
+        .update-banner {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #007AFF; color: #fff; padding: 12px 24px; border-radius: 50px; font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; z-index: 300; display: none;
+        }
+        .update-banner.show { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-text">B</div>
+        <h1>BroBro Lab</h1>
+        <div class="sub">Самый близкий сервис Apple</div>
 
-    // === Статус сети ===
-    const statusEl = document.getElementById('status');
-    function updateStatus() {
-        if (navigator.onLine) {
-            statusEl.textContent = 'Онлайн';
-            statusEl.classList.remove('offline'); statusEl.classList.add('online');
+        <div class="chrome-hint" id="chromeHint" style="display:none;">
+            <div class="hint-title">🔵 Вы не в Chrome</div>
+            <p style="margin-top:16px; font-size:15px;">Для установки нажмите:</p>
+            <button class="copy-btn" id="copyLinkBtn" style="margin-top:12px;">📋 Скопировать ссылку</button>
+            <p style="font-size:14px; line-height:1.5; color:#8e8e93;">1. Откройте Chrome<br>2. Вставьте ссылку в адресную строку</p>
+            <button class="copy-btn" id="openChromeBtn" style="margin-top:12px; background:#2c2c2e; border:1px solid #3a3a3c;">🌐 Открыть в Chrome</button>
+        </div>
+
+        <div class="install-buttons" id="installButtons">
+            <button class="install-btn" id="installBtnAndroid">📱 Установить приложение</button>
+            <button class="install-btn" id="installBtnIOS">🍏 Установить на iPhone</button>
+        </div>
+
+        <div>
+            <a href="https://brobrostore.ru/" class="nav-btn">🛒 Магазин техники</a>
+            <a href="https://brobrolab.ru/service" class="nav-btn">🛠 Сервис и ремонт</a>
+            <a href="tel:+74991101785" class="nav-btn">📞 Позвонить</a>
+        </div>
+    </div>
+
+    <div class="update-banner" id="updateBanner">🔄 Доступно обновление. Нажмите здесь</div>
+
+    <div class="modal" id="iosModal">
+        <div class="modal-content">
+            <h3>Установить на iPhone</h3>
+            <div class="step"><span class="step-num">1</span><span>Нажмите «Поделиться» ⎕ внизу экрана</span></div>
+            <div class="step"><span class="step-num">2</span><span>Найдите и нажмите «На экран «Домой»»</span></div>
+            <div class="step"><span class="step-num">3</span><span>Нажмите «Добавить» в правом верхнем углу</span></div>
+            <button class="install-btn" style="margin-top: 16px;" onclick="document.getElementById('iosModal').classList.remove('show')">Понятно</button>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt = null;
+        let newWorker = null;
+        const installButtons = document.getElementById('installButtons');
+        const installBtnAndroid = document.getElementById('installBtnAndroid');
+        const installBtnIOS = document.getElementById('installBtnIOS');
+        const iosModal = document.getElementById('iosModal');
+        const chromeHint = document.getElementById('chromeHint');
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        const updateBanner = document.getElementById('updateBanner');
+
+        const ua = navigator.userAgent;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        const isIOS = /iPhone|iPad|iPod/.test(ua);
+        const isAndroid = /Android/.test(ua);
+        const isChrome = /Chrome/.test(ua) && !/YaBrowser|OPR|Firefox|SamsungBrowser|Edg/.test(ua);
+
+        if (isStодельно) {
+            installButtons.style.display = 'none';
+            chromeHint.style.display = 'none';
+        } else if ((isAndroid || !isIOS) && !isChrome) {
+            installButtons.style.display = 'none';
+            chromeHint.style.display = 'block';
         } else {
-            statusEl.textContent = 'Офлайн (контакты доступны)';
-            statusEl.classList.remove('online'); statusEl.classList.add('offline');
+            if (isIOS) installBtnAndroid.style.display = 'none';
+            else installBtnIOS.style.display = 'none';
         }
-    }
-    window.addEventListener('online', updateStatus);
-    window.addEventListener('offline', updateStatus);
-    updateStatus();
 
-    // === ЛОГИКА УСТАНОВКИ (РФ-совместимая) ===
-    const installBar = document.getElementById('installBar');
-    const installBarText = document.getElementById('installBarText');
-    const iosOverlay = document.getElementById('iosOverlay');
-    const openSafariOverlay = document.getElementById('openSafariOverlay');
-    const macSafariOverlay = document.getElementById('macSafariOverlay');
+        copyLinkBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                copyLinkBtn.textContent = '✅ Ссылка скопирована!';
+                setTimeout(() => { copyLinkBtn.textContent = '📋 Скопировать ссылку'; }, 2000);
+            });
+        });
 
-    const ua = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(ua);
-    const isMac = /Macintosh/.test(ua) && !isIOS;
-    const isAndroid = /Android/.test(ua);
-    const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|Edg|OPR|YaBrowser|SamsungBrowser/.test(ua);
-    const isChromium = /Chrome|CriOS|Edg|OPR|YaBrowser|SamsungBrowser/.test(ua);
+        document.getElementById('openChromeBtn').addEventListener('click', () => {
+            const url = window.location.href;
+            const cleanUrl = url.replace(/^https?:\/\//, '');
+            window.location.href = 'intent://' + cleanUrl + '#Intent;scheme=googlechrome;end';
+        });
 
-    // Уже установлено?
-    function isStandalone() {
-        return window.matchMedia('(display-mode: standalone)').matches
-            || window.navigator.standalone === true;
-    }
+        window.addEventListener('beforeinstallprompt', (e) => { 
+            deferredPrompt = e; 
+        });
 
-    if (!isStandalone()) {
-
-        // === iOS + SAFARI: показываем инструкцию по клику ===
-        if (isIOS && isSafari) {
-            installBar.style.display = 'flex';
-            installBarText.textContent = 'Установить на iPhone';
-            installBar.addEventListener('click', () => {
-                iosOverlay.style.display = 'flex';
-            });
-            document.getElementById('iosCloseBtn').addEventListener('click', () => {
-                iosOverlay.style.display = 'none';
-            });
-        }
-        // === iOS + НЕ SAFARI (Chrome/Яндекс и т.д.): предлагаем открыть в Safari ===
-        else if (isIOS && !isSafari) {
-            installBar.style.display = 'flex';
-            installBarText.textContent = 'Установить на iPhone';
-            installBar.addEventListener('click', () => {
-                openSafariOverlay.style.display = 'flex';
-            });
-            document.getElementById('openSafariBtn').addEventListener('click', () => {
-                // Открываем текущую страницу в Safari
-                window.location.href = 'safari://' + window.location.host + window.location.pathname;
-            });
-            document.getElementById('openSafariDismiss').addEventListener('click', () => {
-                openSafariOverlay.style.display = 'none';
-            });
-        }
-        // === macOS + SAFARI: инструкция «Файл → Добавить в Dock» ===
-        else if (isMac && isSafari) {
-            installBar.style.display = 'flex';
-            installBarText.textContent = 'Добавить в Dock';
-            installBar.addEventListener('click', () => {
-                macSafariOverlay.style.display = 'flex';
-            });
-            document.getElementById('macSafariCloseBtn').addEventListener('click', () => {
-                macSafariOverlay.style.display = 'none';
-            });
-        }
-        // === Android / Windows / macOS + Chromium (Chrome/Edge/Яндекс/Opera): системная установка ===
-        else if (isChromium) {
-            let deferredPrompt = null;
-
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installBar.style.display = 'flex';
-                installBarText.textContent = 'Установить приложение';
-            });
-
-            installBar.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        installBar.style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                } else {
-                    // Если beforeinstallprompt не сработал — показываем общую инструкцию
-                    alert('Используйте меню браузера (⋮) → «Установить приложение» или «Добавить на главный экран»');
+        installBtnAndroid.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') { 
+                    installButtons.style.display = 'none'; 
                 }
-            });
+                deferredPrompt = null;
+            }
+        });
 
-            window.addEventListener('appinstalled', () => {
-                installBar.style.display = 'none';
+        installBtnIOS.addEventListener('click', () => { iosModal.classList.add('show'); });
+
+        window.addEventListener('appinstalled', () => { 
+            installButtons.style.display = 'none'; 
+            deferredPrompt = null; 
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(registration => {
+                setInterval(() => { registration.update(); }, 60000);
+                registration.addEventListener('updatefound', () => {
+                    newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            updateBanner.classList.add('show');
+                        }
+                    });
+                });
+            });
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (refreshing) return;
+                refreshing = true;
+                window.location.reload();
             });
         }
-    }
-</script>
+
+        updateBanner.addEventListener('click', () => {
+            if (newWorker) { newWorker.postMessage({ type: 'SKIP_WAITING' }); }
+        });
+    </script>
+</body>
+</html>

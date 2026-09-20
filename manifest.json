@@ -1,20 +1,29 @@
 {
   "name": "BroBro Lab",
   "short_name": "BroBro",
+  "description": "Авторизованный сервис и магазин Apple",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "orientation": "portrait",
+  "lang": "ru",
   "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "shortcuts": [
     {
-      "src": "https://vf12776-ux.github.io/brobro-pwa/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "name": "Магазин",
+      "short_name": "Магазин",
+      "url": "https://brobrostore.ru/",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "src": "https://vf12776-ux.github.io/brobro-pwa/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "name": "Сервис",
+      "short_name": "Сервис",
+      "url": "https://brobrolab.ru/service",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
