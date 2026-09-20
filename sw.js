@@ -1,4 +1,4 @@
-const CACHE_NAME = 'brobro-v11';
+const CACHE_NAME = 'brobro-v12';
 const ASSETS = [
   './',
   './index.html',

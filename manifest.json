@@ -1,11 +1,11 @@
 {
   "name": "BroBro Lab",
   "short_name": "BroBro",
-  "description": "Авторизованный сервис и магазин Apple",
+  "description": "Авторизованный сервис Apple",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#0a0a0a",
+  "theme_color": "#696969",
   "orientation": "portrait",
   "lang": "ru",
   "icons": [
