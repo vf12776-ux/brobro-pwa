@@ -4,20 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    
-    <!-- iOS специфичные теги для PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="BroBro Lab">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Иконка встроена прямо в код (Base64 SVG) -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzAwN0FGRiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyODAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSI+QjwvdGV4dD48L3N2Zz4=">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzAwN0FGRiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyODAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSI+QjwvdGV4dD48L3N2Zz4=">
-    
     <title>BroBro Lab - Гид по сервису</title>
     <link rel="manifest" href="manifest.json">
-    
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body {
@@ -35,7 +29,7 @@
         .status.offline { color: #ff3b30; }
         .status.online { color: #34c759; }
         main {
-            flex: 1; padding: 20px 16px; padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+            flex: 1; padding: 20px 16px; padding-bottom: calc(env(safe-area-inset-bottom) + 100px);
             overflow-y: auto;
         }
         .section-title {
@@ -63,6 +57,60 @@
         .contact-text { font-size: 15px; flex: 1; }
         .contact-arrow { color: #c7c7cc; font-size: 18px; }
 
+        /* ===== КНОПКА УСТАНОВКИ (Chrome) ===== */
+        .install-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #007AFF; color: #fff;
+            padding: 16px 20px; padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+            display: none; align-items: center; justify-content: center; gap: 10px;
+            z-index: 200; cursor: pointer; border: none; width: 100%;
+            font-size: 16px; font-weight: 600; font-family: inherit;
+        }
+        .install-bar:active { background: #0056CC; }
+
+        /* ===== БАННЕР "ВЫ НЕ В CHROME" ===== */
+        .not-chrome-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); z-index: 300;
+            display: none; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .not-chrome-card {
+            background: #fff; border-radius: 20px; padding: 28px 24px;
+            max-width: 340px; width: 100%; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .not-chrome-card h2 {
+            font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #000;
+        }
+        .not-chrome-card .subtitle {
+            font-size: 14px; color: #8e8e93; margin-bottom: 20px; line-height: 1.4;
+        }
+        .not-chrome-card .link-box {
+            background: #f2f2f7; border-radius: 10px; padding: 12px;
+            font-size: 13px; color: #007AFF; word-break: break-all;
+            margin-bottom: 16px; user-select: all;
+        }
+        .nc-btn {
+            display: block; width: 100%; padding: 14px; border-radius: 12px;
+            font-size: 15px; font-weight: 600; border: none; cursor: pointer;
+            font-family: inherit; margin-bottom: 10px; transition: transform 0.1s;
+        }
+        .nc-btn:active { transform: scale(0.97); }
+        .nc-btn.copy {
+            background: #f2f2f7; color: #007AFF;
+        }
+        .nc-btn.copy.copied {
+            background: #34c759; color: #fff;
+        }
+        .nc-btn.open-chrome {
+            background: #007AFF; color: #fff;
+        }
+        .nc-btn.dismiss {
+            background: none; color: #8e8e93; font-weight: 400; font-size: 14px;
+            margin-bottom: 0;
+        }
+
         @media (prefers-color-scheme: dark) {
             body { background: #000; color: #fff; }
             .header { background: #1c1c1e; border-bottom-color: rgba(255,255,255,0.1); }
@@ -70,6 +118,10 @@
             .btn:active { background: #2c2c2e; }
             .contact-item { border-bottom-color: rgba(255,255,255,0.1); }
             .contact-item:active { background: #2c2c2e; }
+            .not-chrome-card { background: #1c1c1e; }
+            .not-chrome-card h2 { color: #fff; }
+            .not-chrome-card .link-box { background: #2c2c2e; }
+            .nc-btn.copy { background: #2c2c2e; }
         }
     </style>
 </head>
@@ -122,14 +174,34 @@
         </div>
     </main>
 
+    <!-- КНОПКА УСТАНОВКИ ДЛЯ CHROME -->
+    <button class="install-bar" id="installBar">
+        <span>📲</span> Установить приложение
+    </button>
+
+    <!-- БАННЕР ДЛЯ НЕ-CHROME БРАУЗЕРОВ -->
+    <div class="not-chrome-overlay" id="notChromeOverlay">
+        <div class="not-chrome-card">
+            <h2>⚠️ Вы не в Chrome</h2>
+            <p class="subtitle">Для установки приложения нужен браузер Google Chrome. Он уже установлен на вашем устройстве.</p>
+            <div class="link-box" id="linkBox"></div>
+            <button class="nc-btn copy" id="copyBtn">📋 Скопировать ссылку</button>
+            <button class="nc-btn open-chrome" id="openChromeBtn">🌐 Открыть в Chrome</button>
+            <button class="nc-btn dismiss" id="dismissBtn">Продолжить без установки</button>
+        </div>
+    </div>
+
     <script>
+        // === Service Worker ===
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW registered'))
+                    .then(() => console.log('SW registered'))
                     .catch(err => console.log('SW error:', err));
             });
         }
+
+        // === Статус сети ===
         const statusEl = document.getElementById('status');
         function updateStatus() {
             if (navigator.onLine) {
@@ -143,6 +215,103 @@
         window.addEventListener('online', updateStatus);
         window.addEventListener('offline', updateStatus);
         updateStatus();
+
+        // === ЛОГИКА УСТАНОВКИ ===
+        const installBar = document.getElementById('installBar');
+        const overlay = document.getElementById('notChromeOverlay');
+        const linkBox = document.getElementById('linkBox');
+        const copyBtn = document.getElementById('copyBtn');
+        const openChromeBtn = document.getElementById('openChromeBtn');
+        const dismissBtn = document.getElementById('dismissBtn');
+
+        const currentUrl = window.location.href;
+        linkBox.textContent = currentUrl;
+
+        // Проверка: уже установлено?
+        function isStandalone() {
+            return window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true;
+        }
+
+        // Проверка: Chromium-based браузер?
+        function isChromium() {
+            return /Chrome|CriOS|Edg|OPR/.test(navigator.userAgent);
+        }
+
+        if (!isStandalone()) {
+            if (isChromium()) {
+                // === CHROME / EDGE / OPERA ===
+                let deferredPrompt = null;
+
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    installBar.style.display = 'flex';
+                });
+
+                installBar.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            installBar.style.display = 'none';
+                        }
+                        deferredPrompt = null;
+                    }
+                });
+
+                window.addEventListener('appinstalled', () => {
+                    installBar.style.display = 'none';
+                });
+
+            } else {
+                // === НЕ CHROME (Safari, Firefox, Яндекс и т.д.) ===
+                overlay.style.display = 'flex';
+
+                // Скопировать ссылку
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(currentUrl);
+                    } catch {
+                        // Fallback для старых браузеров
+                        const ta = document.createElement('textarea');
+                        ta.value = currentUrl;
+                        ta.style.position = 'fixed';
+                        ta.style.left = '-9999px';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                    copyBtn.textContent = '✅ Скопировано!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = '📋 Скопировать ссылку';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                });
+
+                // Открыть в Chrome
+                openChromeBtn.addEventListener('click', () => {
+                    const url = currentUrl.replace(/^https?:\/\//, '');
+                    const isAndroid = /Android/.test(navigator.userAgent);
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+                    if (isAndroid) {
+                        window.location.href = 'intent://' + url + '#Intent;scheme=https;package=com.android.chrome;end';
+                    } else if (isIOS) {
+                        window.location.href = 'googlechromes://' + url;
+                    } else {
+                        window.location.href = 'googlechrome://' + url;
+                    }
+                });
+
+                // Закрыть баннер
+                dismissBtn.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                });
+            }
+        }
     </script>
 </body>
 </html>
