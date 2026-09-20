@@ -5,318 +5,236 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BroBro Lab</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#696969">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="BroBro Lab">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #000000;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at center, rgba(0,122,255,0.08) 0%, transparent 70%);
-            pointer-events: none;
+            color: #fff;
         }
         .container {
             max-width: 400px;
             width: 100%;
-            background: linear-gradient(145deg, #1a1a1a 0%, #141414 100%);
-            border-radius: 28px;
-            padding: 40px 28px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 0 1px #505050, 0 0 0 3px #2a2a2a, inset 0 1px 0 rgba(255,255,255,0.08);
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
-        .logo-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .logo-bg {
-            position: absolute;
-            font-size: 115px;
-            opacity: 0.22;
-            color: #808080;
-            z-index: 0;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        /* Логотип Apple */
+        .logo-svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            fill: #ffffff;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
         }
         h1 { 
             font-size: 32px; 
-            font-weight: 800; 
-            margin-bottom: 6px; 
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .sub { 
-            color: #ffffff; 
-            font-size: 16px; 
-            margin-bottom: 36px; 
-            font-weight: 700;
-            opacity: 0.9;
+            color: #86868b; 
+            font-size: 17px; 
+            margin-bottom: 40px; 
+            font-weight: 400;
         }
+        
+        /* Кнопки установки (Синий Металлик) */
         .install-buttons { 
             display: flex; 
             flex-direction: column; 
-            gap: 14px; 
-            margin-bottom: 36px; 
+            gap: 16px; 
+            margin-bottom: 40px; 
         }
         .install-btn {
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            gap: 10px;
-            padding: 16px 24px; 
+            gap: 12px;
+            padding: 18px 24px; 
             border: none; 
-            border-radius: 50px;
-            font-size: 16px; 
+            border-radius: 18px;
+            font-size: 17px; 
             font-weight: 600; 
             cursor: pointer; 
-            transition: all 0.2s ease;
-            background: linear-gradient(145deg, #909090 0%, #C0C0C0 20%, #A8A8A8 50%, #787878 80%, #909090 100%);
-            color: #1a1a1a;
-            border: 1px solid #B0B0B0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 3px rgba(255,255,255,0.5), inset 0 -1px 2px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+            /* Синий металлик градиент */
+            background: linear-gradient(180deg, #2E5CFF 0%, #0040DD 100%);
+            color: #fff;
+            /* Объемная тень и блик */
+            box-shadow: 
+                0 4px 12px rgba(0, 64, 221, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .install-btn:active { transform: scale(0.98); }
-        .install-btn svg { width: 20px; height: 20px; fill: #1a1a1a; flex-shrink: 0; }
+        .install-btn:active { transform: scale(0.96); }
+        .install-btn svg { width: 22px; height: 22px; fill: #fff; }
+
+        /* Навигационные кнопки (Темный металл) */
         .nav-btn {
             display: block; 
-            padding: 16px 20px; 
-            margin-bottom: 12px; 
-            border-radius: 16px;
+            padding: 18px 20px; 
+            margin-bottom: 14px; 
+            border-radius: 18px;
             text-decoration: none; 
-            font-size: 16px; 
-            font-weight: 600; 
-            transition: all 0.2s ease;
-            background: linear-gradient(145deg, #909090 0%, #C0C0C0 20%, #A8A8A8 50%, #787878 80%, #909090 100%);
-            color: #1a1a1a;
-            border: 1px solid #B0B0B0;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 3px rgba(255,255,255,0.5), inset 0 -1px 2px rgba(0,0,0,0.2);
+            font-size: 17px; 
+            font-weight: 500; 
+            transition: transform 0.1s;
+            background: linear-gradient(180deg, #1c1c1e 0%, #121212 100%);
+            color: #fff;
+            border: 1px solid #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
-        .nav-btn:active { transform: scale(0.98); }
+        .nav-btn:active { transform: scale(0.98); background: #2c2c2e; }
+
+        /* Подсказка для не-Chrome */
         .chrome-hint {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid #505050;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 36px;
+            background: #1c1c1e;
+            border: 1px solid #333;
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 40px;
             text-align: center;
-            color: #f0f0f0;
         }
-        .chrome-hint .hint-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #d4af37; }
-        .chrome-hint p { font-size: 14px; line-height: 1.5; margin-bottom: 16px; }
-        .chrome-hint strong { color: #d4af37; }
         .copy-btn {
-            padding: 12px 24px;
+            padding: 14px 24px;
             border: none;
-            border-radius: 50px;
-            font-size: 15px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%);
-            color: #1a1a1a;
+            background: #007AFF;
+            color: #fff;
+            width: 100%;
+            margin-top: 12px;
         }
+
+        /* Модалка */
         .modal {
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); 
-            backdrop-filter: blur(12px); 
-            z-index: 200;
-            justify-content: center; 
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 200;
+            justify-content: center; align-items: center;
         }
         .modal.show { display: flex; }
         .modal-content {
-            background: linear-gradient(145deg, #1a1a1a 0%, #141414 100%); 
-            border: 1px solid #505050; 
-            border-radius: 24px;
-            max-width: 320px; 
-            width: 85%; 
-            padding: 28px 24px; 
-            text-align: center; 
-            color: #f0f0f0;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            background: #1c1c1e; border-radius: 24px; padding: 32px; text-align: center; max-width: 320px;
+            border: 1px solid #333;
         }
-        .modal-content h3 { margin-bottom: 20px; color: #d4af37; font-size: 20px; }
-        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; text-align: left; }
-        .step-num {
-            background: linear-gradient(145deg, #909090 0%, #C0C0C0 50%, #787878 100%);
-            color: #1a1a1a; width: 28px; height: 28px; border-radius: 14px;
-            display: inline-flex; align-items: center; justify-content: center;
-            flex-shrink: 0; font-weight: bold; font-size: 14px; border: 1px solid #B0B0B0;
+        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; text-align: left; }
+        .step-num { 
+            background: #007AFF; color: #fff; width: 30px; height: 30px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; 
         }
-        .update-banner {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%);
-            color: #1a1a1a; padding: 12px 24px; border-radius: 50px; font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; z-index: 300; display: none;
-        }
-        .update-banner.show { display: block; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo-container">
-            <div class="logo-bg">🍎</div>
-            <div style="position:relative; z-index:1; font-size:80px; font-weight:900; color:#007AFF;">B</div>
-        </div>
+        <!-- Логотип Apple -->
+        <svg class="logo-svg" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+        </svg>
+        
         <h1>BroBro Lab</h1>
         <div class="sub">Авторизованный сервис Apple</div>
 
         <div class="chrome-hint" id="chromeHint" style="display:none;">
-            <div class="hint-title">🔵 Вы не в Chrome</div>
-            <p style="margin-top:16px; font-size:15px; font-weight:600;">Нажмите</p>
-            <div style="font-size:24px; margin:4px 0 10px;">⬇️</div>
-            <button class="copy-btn" id="copyLinkBtn" style="margin-bottom:20px;">📋 Скопировать</button>
-            <p style="font-size:15px; line-height:1.7; text-align:left; display:inline-block;">
-                1. Откройте Chrome<br>
-                2. Вставьте ссылку
-            </p>
-            <div style="font-size:24px; margin:10px 0;">⬇️</div>
-            <button class="copy-btn" id="openChromeBtn">🌐 Открыть Chrome</button>
+            <div style="font-size:18px; font-weight:700; margin-bottom:10px; color:#007AFF;">🔵 Вы не в Chrome</div>
+            <p style="color:#86868b; margin-bottom:16px;">Для установки нужен Chrome.</p>
+            <button class="copy-btn" id="copyLinkBtn">📋 Скопировать ссылку</button>
+            <button class="copy-btn" id="openChromeBtn" style="background:#2c2c2e; margin-top:8px;">🌐 Открыть в Chrome</button>
         </div>
 
         <div class="install-buttons" id="installButtons">
-            <button class="install-btn" id="installBtnAndroid">📱 Установить на Android</button>
+            <button class="install-btn" id="installBtnAndroid">
+                <svg viewBox="0 0 384 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 4.3 17.5-5.6 17.5-5.6l-2.1-6.8c-6.6-17.5-10.5-36.3-10.5-55.7 0-85.5 69.8-154.8 155.8-154.8 8.8 0 17.5.7 26 2.1 1.8.3 3.6-1.1 3.6-2.9V10.9c0-1.6-1.3-2.9-2.9-2.9H244.8z"/></svg>
+                Установить приложение
+            </button>
             <button class="install-btn" id="installBtnIOS">
-                <svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-                </svg>
-                Установить на iPhone
+                <svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                Установка на iPhone
             </button>
         </div>
 
         <div>
-            <a href="https://brobrostore.ru/" class="nav-btn">🛒 Магазин</a>
-            <a href="https://brobrolab.ru/service" class="nav-btn">🛠 Сервис</a>
+            <a href="https://brobrostore.ru/" class="nav-btn">🛒 Магазин техники</a>
+            <a href="https://brobrolab.ru/service" class="nav-btn">🛠 Сервис и ремонт</a>
             <a href="tel:+74991101785" class="nav-btn">📞 Позвонить</a>
         </div>
     </div>
 
-    <div class="update-banner" id="updateBanner">
-        🔄 Доступно обновление. Нажмите для обновления
-    </div>
-
     <div class="modal" id="iosModal">
         <div class="modal-content">
-            <h3> Установить на iPhone</h3>
-            <div class="step"><span class="step-num">1</span><span>Нажмите «Поделиться» ⎕</span></div>
-            <div class="step"><span class="step-num">2</span><span>Прокрутите вниз → «На экран Домой»</span></div>
-            <div class="step"><span class="step-num">3</span><span>Нажмите «Добавить»</span></div>
-            <button class="install-btn" style="margin-top: 16px;" onclick="document.getElementById('iosModal').classList.remove('show')">Закрыть</button>
+            <h3 style="color:#007AFF; margin-bottom:20px;">Установка на iPhone</h3>
+            <div class="step"><span class="step-num">1</span><span>Нажми «Поделиться» ⎕ внизу</span></div>
+            <div class="step"><span class="step-num">2</span><span>Выбери «На экран «Домой»»</span></div>
+            <div class="step"><span class="step-num">3</span><span>Нажми «Добавить»</span></div>
+            <button class="install-btn" onclick="document.getElementById('iosModal').classList.remove('show')">Закрыть</button>
         </div>
     </div>
 
     <script>
         let deferredPrompt = null;
-        let newWorker = null;
-        const installButtons = document.getElementById('installButtons');
         const installBtnAndroid = document.getElementById('installBtnAndroid');
         const installBtnIOS = document.getElementById('installBtnIOS');
-        const iosModal = document.getElementById('iosModal');
         const chromeHint = document.getElementById('chromeHint');
-        const copyLinkBtn = document.getElementById('copyLinkBtn');
-        const updateBanner = document.getElementById('updateBanner');
-
         const ua = navigator.userAgent;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
         const isIOS = /iPhone|iPad|iPod/.test(ua);
-        const isAndroid = /Android/.test(ua);
         const isChrome = /Chrome/.test(ua) && !/YaBrowser|OPR|Firefox|SamsungBrowser|Edg/.test(ua);
 
-        if (isStandalone) {
-            installButtons.style.display = 'none';
-            chromeHint.style.display = 'none';
-        } else if (isAndroid && !isChrome) {
-            installButtons.style.display = 'none';
-            chromeHint.style.display = 'block';
+        if (!isStandalone) {
+            if (isIOS) {
+                installBtnAndroid.style.display = 'none';
+            } else if (!isChrome) {
+                document.getElementById('installButtons').style.display = 'none';
+                chromeHint.style.display = 'block';
+            }
         } else {
-            if (isIOS) installBtnAndroid.style.display = 'none';
-            else installBtnIOS.style.display = 'none';
+            document.getElementById('installButtons').style.display = 'none';
+            chromeHint.style.display = 'none';
         }
 
-        copyLinkBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                copyLinkBtn.textContent = '✅ Скопировано!';
-                setTimeout(() => { copyLinkBtn.textContent = '📋 Скопировать'; }, 2000);
-            });
-        });
-
-        document.getElementById('openChromeBtn').addEventListener('click', () => {
-            const url = window.location.href;
-            const cleanUrl = url.replace(/^https?:\/\//, '');
-            window.location.href = 'intent://' + cleanUrl + '#Intent;scheme=googlechrome;end';
-        });
-
-        window.addEventListener('beforeinstallprompt', (e) => { 
-            deferredPrompt = e; 
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
         });
 
         installBtnAndroid.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') { 
-                    installButtons.style.display = 'none'; 
-                    localStorage.setItem('pwa-installed', 'true'); 
-                }
+                if (outcome === 'accepted') document.getElementById('installButtons').style.display = 'none';
                 deferredPrompt = null;
             }
         });
 
-        installBtnIOS.addEventListener('click', () => { iosModal.classList.add('show'); });
+        installBtnIOS.addEventListener('click', () => document.getElementById('iosModal').classList.add('show'));
 
-        window.addEventListener('appinstalled', () => { 
-            installButtons.style.display = 'none'; 
-            localStorage.setItem('pwa-installed', 'true'); 
-            deferredPrompt = null; 
+        document.getElementById('copyLinkBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Ссылка скопирована!');
+        });
+
+        document.getElementById('openChromeBtn').addEventListener('click', () => {
+            const url = window.location.href.replace(/^https?:\/\//, '');
+            window.location.href = 'intent://' + url + '#Intent;scheme=googlechrome;end';
         });
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(registration => {
-                setInterval(() => { registration.update(); }, 60000);
-                registration.addEventListener('updatefound', () => {
-                    newWorker = registration.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            updateBanner.classList.add('show');
-                        }
-                    });
-                });
-            });
-            let refreshing = false;
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (refreshing) return;
-                refreshing = true;
-                window.location.reload();
-            });
+            navigator.serviceWorker.register('sw.js');
         }
-
-        updateBanner.addEventListener('click', () => {
-            if (newWorker) { newWorker.postMessage({ type: 'SKIP_WAITING' }); }
-        });
     </script>
 </body>
 </html>
