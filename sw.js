@@ -1,4 +1,4 @@
-const CACHE_NAME = 'brobro-v2';
+const CACHE_NAME = 'brobro-v3';
 const urlsToCache = [
   './',
   './index.html',
