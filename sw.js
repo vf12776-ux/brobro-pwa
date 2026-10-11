@@ -1,8 +1,11 @@
-const CACHE_NAME = 'brobro-v15';
+const CACHE_NAME = 'brobro-v16';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './offline.html',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 self.addEventListener('install', (e) => {
@@ -13,8 +16,8 @@ self.addEventListener('install', (e) => {
 self.addEventListener('fetch', (e) => {
   // Для HTML всегда идем в сеть, чтобы получить обновления
   if (e.request.mode === 'navigate') {
-    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-  } else {
+  e.respondWith(fetch(e.request).catch(() => caches.match('./offline.html')));
+} else {
     // Для картинок и скриптов сначала кэш
     e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request)));
   }
